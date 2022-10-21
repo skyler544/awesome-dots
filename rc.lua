@@ -173,6 +173,54 @@ awful.screen.connect_for_each_screen(function(s)
         buttons = tasklist_buttons
     }
 
+    -- Create a battery status widget
+    local battery_status = wibox.widget {
+        widget = wibox.widget.textbox
+    }
+
+   gears.timer {
+       timeout = 10,
+       call_now = true,
+       autostart = true,
+       callback = function()
+           awful.spawn.easy_async("battery-status", function(stdout)
+               battery_status:set_text(stdout)
+           end)
+       end
+   }
+
+    -- Create a network status widget
+    local wlan_ssid = wibox.widget {
+        widget = wibox.widget.textbox
+    }
+
+   gears.timer {
+       timeout = 10,
+       call_now = true,
+       autostart = true,
+       callback = function()
+           awful.spawn.easy_async("wlan-ssid", function(stdout)
+               wlan_ssid:set_text(stdout)
+           end)
+       end
+   }
+
+    -- Create a vpn status widget
+    local vpn_status = wibox.widget {
+        widget = wibox.widget.textbox
+    }
+
+   gears.timer {
+       timeout = 10,
+       call_now = true,
+       autostart = true,
+       callback = function()
+           awful.spawn.easy_async("vpn-status", function(stdout)
+               vpn_status:set_text(stdout)
+           end)
+       end
+   }
+
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s })
 
@@ -187,11 +235,15 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+            battery_status,
+            wlan_ssid,
+            vpn_status,
             wibox.widget.systray(),
             mytextclock,
             s.mylayoutbox,
         },
     }
+
 end)
 -- }}}
 
