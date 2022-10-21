@@ -15,19 +15,21 @@ theme.font          = "Iosevka Custom Extended Semibold 8"
 
 theme.bg_normal     = "#232830"
 theme.bg_focus      = "#535d6c"
+-- theme.bg_focus      = "#478061"
 theme.bg_urgent     = "#ff0000"
 theme.bg_minimize   = "#444444"
 theme.bg_systray    = theme.bg_normal
 
-theme.fg_normal     = "#aaaaaa"
-theme.fg_focus      = "#ffffff"
-theme.fg_urgent     = "#ffffff"
-theme.fg_minimize   = "#ffffff"
+theme.fg_normal     = "#c5c8c6"
+theme.fg_focus      = "#c5c8c6"
+theme.fg_urgent     = "#c5c8c6"
+theme.fg_minimize   = "#c5c8c6"
 
 theme.useless_gap   = dpi(0)
 theme.border_width  = dpi(1)
 theme.border_normal = "#232830"
 theme.border_focus  = "#535d6c"
+-- theme.bg_focus      = "#478061"
 theme.border_marked = "#91231c"
 
 -- There are other variable sets
