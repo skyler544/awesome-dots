@@ -18,6 +18,8 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+beautiful.notification_icon_size = 0
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -61,11 +63,9 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-    awful.layout.suit.tile,
     awful.layout.suit.fair,
-    awful.layout.suit.tile.left,
+    awful.layout.suit.tile,
     awful.layout.suit.floating,
-    awful.layout.suit.magnifier,
 }
 -- }}}
 
@@ -78,11 +78,6 @@ myawesomemenu = {
    { "restart", awesome.restart },
    { "quit", function() awesome.quit() end },
 }
-
-mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "open terminal", terminal }
-                                  }
-                        })
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
@@ -136,7 +131,8 @@ local tasklist_buttons = gears.table.join(
                                           end))
 
 local function set_wallpaper(s)
-    gears.wallpaper.centered("/home/clock/images/simple.png", s)
+    gears.wallpaper.centered("/home/clock/images/void-stars-2.png", s)
+    -- gears.wallpaper.centered("/home/clock/images/fractured.png", s)
 end
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
@@ -238,9 +234,9 @@ awful.screen.connect_for_each_screen(function(s)
             battery_status,
             wlan_ssid,
             vpn_status,
-            wibox.widget.systray(),
+            -- wibox.widget.systray(),
             mytextclock,
-            s.mylayoutbox,
+            -- s.mylayoutbox,
         },
     }
 
@@ -259,10 +255,12 @@ root.buttons(gears.table.join(
 globalkeys = gears.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
-              {description = "view previous", group = "tag"}),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
-              {description = "view next", group = "tag"}),
+    awful.key({ modkey, "Shift"   }, "c", function () awful.spawn("emacsclient ~/.config/awesome/rc.lua") end,
+              {description="Edit config", group="awesome"}),
+    -- awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
+    --           {description = "view previous", group = "tag"}),
+    -- awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
+    --           {description = "view next", group = "tag"}),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
 
@@ -280,14 +278,14 @@ globalkeys = gears.table.join(
     ),
 
     -- Layout manipulation
-    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
-              {description = "swap with next client by index", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,
-              {description = "swap with previous client by index", group = "client"}),
-    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end,
-              {description = "focus the next screen", group = "screen"}),
-    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end,
-              {description = "focus the previous screen", group = "screen"}),
+    awful.key({ modkey, "Control" }, "h", function () awful.client.swap.global_bydirection("left") end,
+              {description = "swap with client leftwards", group = "client"}),
+    awful.key({ modkey, "Control" }, "j", function () awful.client.swap.global_bydirection("down") end,
+              {description = "swap with client downwards", group = "client"}),
+    awful.key({ modkey, "Control" }, "k", function () awful.client.swap.global_bydirection("up") end,
+              {description = "swap with client upwards", group = "client"}),
+    awful.key({ modkey, "Control" }, "l", function () awful.client.swap.global_bydirection("right") end,
+              {description = "swap with client rightwards", group = "client"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
     awful.key({ modkey,           }, "Tab",
@@ -299,16 +297,35 @@ globalkeys = gears.table.join(
         end,
         {description = "go back", group = "client"}),
 
+    awful.key({ modkey, "Shift" }, "x",
+              function ()
+                  awful.prompt.run {
+                    prompt       = "Run Lua code: ",
+                    textbox      = awful.screen.focused().mypromptbox.widget,
+                    exe_callback = awful.util.eval,
+                    history_path = awful.util.get_cache_dir() .. "/history_eval"
+                  }
+              end,
+              {description = "lua execute prompt", group = "awesome"}),
+
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
+    awful.key({ modkey,           }, "v", function () awful.spawn("urxvtc -e alsamixer") end,
+              {description = "Open Alsamixer", group = "launcher"}),
+    awful.key({ modkey,           }, "x", function () awful.spawn("urxvtc -e htop") end,
+              {description = "Open htop", group = "launcher"}),
+    awful.key({ modkey,           }, "m", function () awful.spawn("emacsclient -e '(mu4e)'") end,
+              {description = "Open htop", group = "launcher"}),
     awful.key({ modkey,           }, "f", function () awful.spawn("ec") end,
               {description = "Start Emacs", group = "launcher"}),
     awful.key({ modkey,           }, "b", function () awful.spawn("firefox") end,
               {description = "Start Firefox", group = "launcher"}),
-    awful.key({ modkey, "Shift"   }, "s", function () awful.spawn("scrot /home/clock/screenshot/'%Y-%m-%d_$wx$h.png' -e 'optipng $f'") end,
+    awful.key({ modkey, "Shift"   }, "d", function () awful.spawn("firefox --new-window http://m.dict.cc/") end,
+              {description = "dict.cc", group = "launcher"}),
+    awful.key({ modkey, "Shift"   }, "s", function () awful.spawn("fullscreen-snapshot") end,
               {description = "Screenshot", group = "launcher"}),
-    awful.key({ modkey, "Control" }, "s", function () awful.spawn("scrot -u -b /home/clock/screenshot/'%Y-%m-%d_$wx$h.png' -e 'optipng $f'") end,
+    awful.key({ modkey, "Control" }, "s", function () awful.spawn("window-snapshot") end,
               {description = "Screenshot current window", group = "launcher"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
@@ -319,18 +336,13 @@ globalkeys = gears.table.join(
               {description = "increase master width factor", group = "layout"}),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)          end,
               {description = "decrease master width factor", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, true) end,
-              {description = "increase the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, true) end,
-              {description = "decrease the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil, true)    end,
-              {description = "increase the number of columns", group = "layout"}),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
-              {description = "decrease the number of columns", group = "layout"}),
     awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
-              {description = "select next", group = "layout"}),
+              {description = "select next layout", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
-              {description = "select previous", group = "layout"}),
+              {description = "select previous layout", group = "layout"}),
+
+    awful.key({ modkey, "Shift"   }, "l", function () naughty.notify{text=awful.layout.getname(), "Current Layout", 0.2}     end,
+              {description = "Show current layout", group = "layout"}),
 
     awful.key({ modkey, "Control" }, "n",
               function ()
@@ -347,22 +359,44 @@ globalkeys = gears.table.join(
     awful.key({ modkey },            "r",     function () awful.util.spawn_with_shell("dr") end,
               {description = "run prompt", group = "launcher"}),
 
-    awful.key({ modkey }, "x",
-              function ()
-                  awful.prompt.run {
-                    prompt       = "Run Lua code: ",
-                    textbox      = awful.screen.focused().mypromptbox.widget,
-                    exe_callback = awful.util.eval,
-                    history_path = awful.util.get_cache_dir() .. "/history_eval"
-                  }
-              end,
-              {description = "lua execute prompt", group = "awesome"}),
+    -- awful.key({ modkey }, "x",
+    --           function ()
+    --               awful.prompt.run {
+    --                 prompt       = "Run Lua code: ",
+    --                 textbox      = awful.screen.focused().mypromptbox.widget,
+    --                 exe_callback = awful.util.eval,
+    --                 history_path = awful.util.get_cache_dir() .. "/history_eval"
+    --               }
+    --           end,
+    --           {description = "lua execute prompt", group = "awesome"}),
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"})
 )
 
 clientkeys = gears.table.join(
+
+    awful.key({ modkey, "Shift"   }, "Right", function (c) c:relative_move(0, 0, 10, 0) end,
+              {description = "grow rightwards", group = "client"}),
+    awful.key({ modkey, "Shift"   }, "Left", function (c) c:relative_move(0, 0, -10, 0) end,
+              {description = "shrink leftwards", group = "client"}),
+    awful.key({ modkey, "Shift"   }, "Up", function (c) c:relative_move(0, 0, 0, -10) end,
+              {description = "grow downwards", group = "client"}),
+    awful.key({ modkey, "Shift"   }, "Down", function (c) c:relative_move(0, 0, 0, 10) end,
+              {description = "shrink upwards", group = "client"}),
+
+    awful.key({ modkey,           }, "Right", function (c) c:relative_move(10, 0, 0, 0) end,
+              {description = "move rightwards", group = "client"}),
+    awful.key({ modkey,           }, "Left", function (c) c:relative_move(-10, 0, 0, 0) end,
+              {description = "move leftwards", group = "client"}),
+    awful.key({ modkey,           }, "Up", function (c) c:relative_move(0, -10, 0, 0) end,
+              {description = "move upwards", group = "client"}),
+    awful.key({ modkey,           }, "Down", function (c) c:relative_move(0, 10, 0, 0) end,
+              {description = "move downwards", group = "client"}),
+
+    awful.key({ modkey, "Shift"   }, "c", awful.placement.centered,
+              {description = "move downwards", group = "client"}),
+
     awful.key({ modkey, "Control" }, "f",
         function (c)
             c.fullscreen = not c.fullscreen
@@ -377,8 +411,8 @@ clientkeys = gears.table.join(
               {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
-    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
-              {description = "toggle keep on top", group = "client"}),
+    -- awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
+    --           {description = "toggle keep on top", group = "client"}),
     awful.key({ modkey,           }, "n",
         function (c)
             -- The client currently has the input focus, so it cannot be
@@ -550,8 +584,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- Autostart
 autorun = true
 autorunApps = {
-    "picom -b",
-    "emacs --daemon",
+    "start"
 }
 if autorun then
     for app = 1, #autorunApps do
