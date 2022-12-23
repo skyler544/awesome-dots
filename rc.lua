@@ -311,8 +311,8 @@ globalkeys = gears.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
-    awful.key({ modkey,           }, "v", function () awful.spawn("urxvtc -e alsamixer") end,
-              {description = "Open Alsamixer", group = "launcher"}),
+    awful.key({ modkey,           }, "v", function () awful.spawn("pavucontrol") end,
+              {description = "Volume Control", group = "launcher"}),
     awful.key({ modkey,           }, "x", function () awful.spawn("urxvtc -e htop") end,
               {description = "Open htop", group = "launcher"}),
     awful.key({ modkey,           }, "m", function () awful.spawn("emacsclient -e '(mu4e)'") end,
@@ -340,6 +340,13 @@ globalkeys = gears.table.join(
               {description = "select next layout", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous layout", group = "layout"}),
+
+    -- awful.key({ modkey,           }, "F1", function () awful.layout.set(awful.layout.suit.fair)                end,
+    --           {description = "select fair layout", group = "layout"}),
+    -- awful.key({ modkey, "Shift"   }, "F2", function () awful.layout.set(awful.layout.suit.tile)                end,
+    --           {description = "select tiling layout", group = "layout"}),
+    -- awful.key({ modkey, "Shift"   }, "F3", function () awful.layout.set(awful.layout.suit.floating)                end,
+    --           {description = "select floating layout", group = "layout"}),
 
     awful.key({ modkey, "Shift"   }, "l", function () naughty.notify{text=awful.layout.getname(), "Current Layout", 0.2}     end,
               {description = "Show current layout", group = "layout"}),
@@ -420,18 +427,12 @@ clientkeys = gears.table.join(
             c.minimized = true
         end ,
         {description = "minimize", group = "client"}),
-    awful.key({ modkey,           }, "m",
+    awful.key({ modkey, "Shift"   }, "m",
         function (c)
             c.maximized = not c.maximized
             c:raise()
         end ,
         {description = "(un)maximize", group = "client"}),
-    awful.key({ modkey, "Control" }, "m",
-        function (c)
-            c.maximized_vertical = not c.maximized_vertical
-            c:raise()
-        end ,
-        {description = "(un)maximize vertically", group = "client"}),
     awful.key({ modkey, "Shift"   }, "m",
         function (c)
             c.maximized_horizontal = not c.maximized_horizontal
