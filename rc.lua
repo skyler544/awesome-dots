@@ -317,6 +317,8 @@ globalkeys = gears.table.join(
               {description = "Open htop", group = "launcher"}),
     awful.key({ modkey,           }, "m", function () awful.spawn("emacsclient -e '(mu4e)'") end,
               {description = "Open htop", group = "launcher"}),
+    awful.key({ modkey, "Shift"   }, "r", function () awful.spawn("rex") end,
+              {description = "Start Rex", group = "launcher"}),
     awful.key({ modkey,           }, "f", function () awful.spawn("ec") end,
               {description = "Start Emacs", group = "launcher"}),
     awful.key({ modkey,           }, "b", function () awful.spawn("firefox") end,
