@@ -14,6 +14,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
+local zen_mode = -1
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -47,7 +48,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init("/home/clock/.config/awesome/theme.lua")
+beautiful.init("/home/clock/.config/awesome/theme.dark-red.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvtc"
@@ -131,7 +132,8 @@ local tasklist_buttons = gears.table.join(
                                           end))
 
 local function set_wallpaper(s)
-    gears.wallpaper.centered("/home/clock/images/void-stars-2.png", s)
+    gears.wallpaper.maximized("/usr/share/backgrounds/mate/desktop/Ubuntu-Mate-Cold-no-logo.png", s)
+    -- gears.wallpaper.centered("/home/clock/images/void-stars-2.png", s)
     -- gears.wallpaper.centered("/home/clock/images/fractured.png", s)
 end
 
@@ -175,7 +177,7 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
    gears.timer {
-       timeout = 10,
+       timeout = 12,
        call_now = true,
        autostart = true,
        callback = function()
@@ -191,7 +193,7 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
    gears.timer {
-       timeout = 10,
+       timeout = 12,
        call_now = true,
        autostart = true,
        callback = function()
@@ -207,7 +209,7 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
    gears.timer {
-       timeout = 10,
+       timeout = 12,
        call_now = true,
        autostart = true,
        callback = function()
@@ -234,9 +236,7 @@ awful.screen.connect_for_each_screen(function(s)
             battery_status,
             wlan_ssid,
             vpn_status,
-            -- wibox.widget.systray(),
             mytextclock,
-            -- s.mylayoutbox,
         },
     }
 
@@ -245,7 +245,7 @@ end)
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
+    -- awful.button({ }, 3, function () mymainmenu:toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 ))
@@ -277,6 +277,19 @@ globalkeys = gears.table.join(
         {description = "focus previous by index", group = "client"}
     ),
 
+    awful.key({ modkey, "Control" }, "z",
+       function ()
+          if zen_mode == -1 then
+             for i,v in ipairs(awful.screen.focused().tags) do v:delete() end
+             zen_mode = 1
+          else
+             for i,v in ipairs(awful.screen.focused().tags) do v:delete() end
+             awful.tag({ "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+             zen_mode = -1
+          end
+       end,
+       {description = "Toggle zen mode", group = "awesome"}
+    ),
     -- Layout manipulation
     awful.key({ modkey, "Control" }, "h", function () awful.client.swap.global_bydirection("left") end,
               {description = "swap with client leftwards", group = "client"}),
@@ -311,19 +324,23 @@ globalkeys = gears.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
-    awful.key({ modkey,           }, "v", function () awful.spawn("pavucontrol") end,
+    awful.key({ modkey,           }, "v", function () awful.spawn("urxvtc -e alsamixer") end,
               {description = "Volume Control", group = "launcher"}),
     awful.key({ modkey,           }, "x", function () awful.spawn("urxvtc -e htop") end,
               {description = "Open htop", group = "launcher"}),
-    awful.key({ modkey,           }, "m", function () awful.spawn("emacsclient -e '(mu4e)'") end,
-              {description = "Open htop", group = "launcher"}),
+    awful.key({ modkey,           }, "m", function () awful.spawn("rex --eval '(mu4e)'") end,
+              {description = "Open email", group = "launcher"}),
     awful.key({ modkey, "Shift"   }, "r", function () awful.spawn("rex") end,
+    -- awful.key({ modkey, "Shift"   }, "r", function () awful.spawn("emacs") end,
               {description = "Start Rex", group = "launcher"}),
-    awful.key({ modkey,           }, "f", function () awful.spawn("ec") end,
+    awful.key({ modkey,           }, "f", function () awful.spawn("rex-client-frame") end,
+    -- awful.key({ modkey,           }, "f", function () awful.spawn("emacsclient -cna ''") end,
               {description = "Start Emacs", group = "launcher"}),
+    awful.key({ modkey,           }, "e", function () awful.spawn("rofi-finder") end,
+              {description = "Rofi", group = "launcher"}),
     awful.key({ modkey,           }, "b", function () awful.spawn("firefox") end,
               {description = "Start Firefox", group = "launcher"}),
-    awful.key({ modkey, "Shift"   }, "d", function () awful.spawn("firefox --new-window http://m.dict.cc/") end,
+    awful.key({ modkey, "Shift"   }, "d", function () awful.spawn("firefox http://m.dict.cc/") end,
               {description = "dict.cc", group = "launcher"}),
     awful.key({ modkey, "Shift"   }, "s", function () awful.spawn("fullscreen-snapshot") end,
               {description = "Screenshot", group = "launcher"}),
@@ -342,13 +359,6 @@ globalkeys = gears.table.join(
               {description = "select next layout", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous layout", group = "layout"}),
-
-    -- awful.key({ modkey,           }, "F1", function () awful.layout.set(awful.layout.suit.fair)                end,
-    --           {description = "select fair layout", group = "layout"}),
-    -- awful.key({ modkey, "Shift"   }, "F2", function () awful.layout.set(awful.layout.suit.tile)                end,
-    --           {description = "select tiling layout", group = "layout"}),
-    -- awful.key({ modkey, "Shift"   }, "F3", function () awful.layout.set(awful.layout.suit.floating)                end,
-    --           {description = "select floating layout", group = "layout"}),
 
     awful.key({ modkey, "Shift"   }, "l", function () naughty.notify{text=awful.layout.getname(), "Current Layout", 0.2}     end,
               {description = "Show current layout", group = "layout"}),
@@ -429,6 +439,12 @@ clientkeys = gears.table.join(
             c.minimized = true
         end ,
         {description = "minimize", group = "client"}),
+    awful.key({ modkey, "Control" }, "m",
+        function (c)
+            c.maximized_vertical = not c.maximized_vertical
+            c:raise()
+        end ,
+        {description = "(un)maximize vertically", group = "client"}),
     awful.key({ modkey, "Shift"   }, "m",
         function (c)
             c.maximized = not c.maximized
@@ -519,32 +535,27 @@ awful.rules.rules = {
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
+                     -- focus = false,
                      raise = true,
                      keys = clientkeys,
                      buttons = clientbuttons,
                      screen = awful.screen.preferred,
-                     placement = awful.placement.no_overlap+awful.placement.no_offscreen
+                     placement = awful.placement.no_overlap+awful.placement.no_offscreen,
+                     maximized_horizontal = false,
+                     maximized_vertical = false,
+                     maximized = false,
      }
     },
 
     -- Floating clients.
     { rule_any = {
         instance = {
-          "DTA",  -- Firefox addon DownThemAll.
-          "copyq",  -- Includes session name in class.
           "pinentry",
         },
         class = {
           "Arandr",
-          "Blueman-manager",
-          "Gpick",
           "Kruler",
-          "MessageWin",  -- kalarm.
-          "Sxiv",
-          "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
-          "Wpa_gui",
-          "veromix",
-          "xtightvncviewer"},
+        },
 
         -- Note that the name property shown in xprop might be set slightly after creation of the client
         -- and the name shown there might not match defined rules here.
@@ -552,11 +563,15 @@ awful.rules.rules = {
           "Event Tester",  -- xev.
         },
         role = {
-          "AlarmWindow",  -- Thunderbird's calendar.
-          "ConfigManager",  -- Thunderbird's about:config.
-          "pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
         }
       }, properties = { floating = true }},
+
+    -- don't steal focus
+    { rule_any = {
+         class = {
+            "Steam"
+         }
+    }, properties = { focus = false }},
 
 }
 -- }}}
