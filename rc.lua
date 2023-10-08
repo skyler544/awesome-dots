@@ -48,7 +48,9 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init("/home/clock/.config/awesome/theme.dark-red.lua")
+-- beautiful.init("/home/clock/.config/awesome/theme.light-blue.lua")
+beautiful.init("/home/clock/.config/awesome/theme.tomorrow-night.lua")
+-- beautiful.init("/home/clock/.config/awesome/theme.dark-red.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvtc"

@@ -14,11 +14,8 @@ local theme = {}
 theme.font          = "Iosevka Custom Extended Semibold 8"
 
 theme.bg_normal     = "#242832"
--- theme.bg_normal     = "#23283055"
--- theme.bg_focus      = "#295340"
 theme.bg_focus      = "#507681"
 theme.bg_urgent     = "#99324b"
--- theme.bg_minimize   = "#434d5c"
 theme.bg_minimize   = theme.bg_normal
 theme.bg_systray    = theme.bg_normal
 
@@ -31,7 +28,6 @@ theme.useless_gap   = dpi(0)
 theme.border_width  = dpi(1)
 theme.border_normal = theme.bg_normal
 theme.border_focus  = "#507681"
--- theme.border_focus      = "#295340"
 theme.border_marked = "#99324b"
 
 theme.tasklist_disable_icon = true
