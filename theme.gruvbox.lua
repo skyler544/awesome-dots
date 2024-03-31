@@ -14,20 +14,20 @@ local theme = {}
 theme.font          = "Iosevka Custom Extended Semibold 9"
 
 theme.bg_normal     = "#282828"
-theme.bg_focus      = "#b8bb26"
+theme.bg_focus      = "#83a598"
 theme.bg_urgent     = "#d79921"
 theme.bg_minimize   = theme.bg_normal
 theme.bg_systray    = theme.bg_normal
 
-theme.fg_normal     = "#c5c8c6"
-theme.fg_focus      = "#c5c8c6"
-theme.fg_urgent     = "#c5c8c6"
-theme.fg_minimize   = "#c5c8c6"
+theme.fg_normal     = "#ebdbb2"
+theme.fg_focus      = "#1d2021"
+theme.fg_urgent     = "#ebdbb2"
+theme.fg_minimize   = "#ebdbb2"
 
 theme.useless_gap   = dpi(0)
 theme.border_width  = dpi(1)
 theme.border_normal = theme.bg_normal
-theme.border_focus  = "#b8bb26"
+theme.border_focus  = "#83a598"
 theme.border_marked = "#d79921"
 
 theme.tasklist_disable_icon = true
