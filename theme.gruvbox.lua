@@ -13,9 +13,9 @@ local theme = {}
 
 theme.font          = "Iosevka Custom Extended Semibold 9"
 
-theme.bg_normal     = "#242832"
-theme.bg_focus      = "#507681"
-theme.bg_urgent     = "#99324b"
+theme.bg_normal     = "#282828"
+theme.bg_focus      = "#b8bb26"
+theme.bg_urgent     = "#d79921"
 theme.bg_minimize   = theme.bg_normal
 theme.bg_systray    = theme.bg_normal
 
@@ -27,12 +27,12 @@ theme.fg_minimize   = "#c5c8c6"
 theme.useless_gap   = dpi(0)
 theme.border_width  = dpi(1)
 theme.border_normal = theme.bg_normal
-theme.border_focus  = "#507681"
-theme.border_marked = "#99324b"
+theme.border_focus  = "#b8bb26"
+theme.border_marked = "#d79921"
 
 theme.tasklist_disable_icon = true
 
-theme.hotkeys_modifiers_fg = "#8c9440"
+theme.hotkeys_modifiers_fg = "#b16286"
 
 -- There are other variable sets
 -- overriding the default one when
