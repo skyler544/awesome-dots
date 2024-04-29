@@ -48,8 +48,11 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
+beautiful.init("/home/clock/.config/awesome/theme.modus.lua")
+-- beautiful.init("/home/clock/.config/awesome/theme.gruvbox.lua")
 -- beautiful.init("/home/clock/.config/awesome/theme.light-blue.lua")
-beautiful.init("/home/clock/.config/awesome/theme.tomorrow-night.lua")
+-- beautiful.init("/home/clock/.config/awesome/theme.tomorrow-night.lua")
+-- beautiful.init("/home/clock/.config/awesome/theme.void.lua")
 -- beautiful.init("/home/clock/.config/awesome/theme.dark-red.lua")
 
 -- This is used later as the default terminal and editor to run.
@@ -134,7 +137,9 @@ local tasklist_buttons = gears.table.join(
                                           end))
 
 local function set_wallpaper(s)
-    gears.wallpaper.maximized("/usr/share/backgrounds/mate/desktop/Ubuntu-Mate-Cold-no-logo.png", s)
+    gears.wallpaper.maximized("/home/clock/images/lisp-wall.png", s)
+    -- gears.wallpaper.maximized("/home/clock/.config/awesome/backgrounds/pent-blue.png", s)
+    -- gears.wallpaper.maximized("/usr/share/backgrounds/mate/desktop/Ubuntu-Mate-Cold-no-logo.png", s)
     -- gears.wallpaper.centered("/home/clock/images/void-stars-2.png", s)
     -- gears.wallpaper.centered("/home/clock/images/fractured.png", s)
 end
@@ -230,7 +235,7 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             s.mytaglist,
-            s.mypromptbox,
+            -- s.mypromptbox,
         },
         s.mytasklist, -- Middle widget
         { -- Right widgets
@@ -301,16 +306,14 @@ globalkeys = gears.table.join(
               {description = "swap with client upwards", group = "client"}),
     awful.key({ modkey, "Control" }, "l", function () awful.client.swap.global_bydirection("right") end,
               {description = "swap with client rightwards", group = "client"}),
+    awful.key({ modkey, "Shift" }, "j", function () awful.screen.focus_relative( 1) end,
+              {description = "focus the next screen", group = "screen"}),
+    awful.key({ modkey, "Shift" }, "k", function () awful.screen.focus_relative(-1) end,
+              {description = "focus the previous screen", group = "screen"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
-    awful.key({ modkey,           }, "Tab",
-        function ()
-            awful.client.focus.history.previous()
-            if client.focus then
-                client.focus:raise()
-            end
-        end,
-        {description = "go back", group = "client"}),
+    awful.key({ modkey,           }, "Tab", function () awful.spawn("rofi -show window") end,
+              {description = "Window Switcher", group = "launcher"}),
 
     awful.key({ modkey, "Shift" }, "x",
               function ()
@@ -330,8 +333,6 @@ globalkeys = gears.table.join(
               {description = "Volume Control", group = "launcher"}),
     awful.key({ modkey,           }, "x", function () awful.spawn("urxvtc -e htop") end,
               {description = "Open htop", group = "launcher"}),
-    awful.key({ modkey,           }, "m", function () awful.spawn("rex --eval '(mu4e)'") end,
-              {description = "Open email", group = "launcher"}),
     awful.key({ modkey, "Shift"   }, "r", function () awful.spawn("rex") end,
     -- awful.key({ modkey, "Shift"   }, "r", function () awful.spawn("emacs") end,
               {description = "Start Rex", group = "launcher"}),
