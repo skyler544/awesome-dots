@@ -137,7 +137,8 @@ local tasklist_buttons = gears.table.join(
                                           end))
 
 local function set_wallpaper(s)
-    gears.wallpaper.maximized("/home/clock/images/lisp-wall.png", s)
+    gears.wallpaper.maximized("/home/clock/images/lisp-wall-light.png", s)
+    -- gears.wallpaper.maximized("/home/clock/images/lisp-wall-dark.png", s)
     -- gears.wallpaper.maximized("/home/clock/.config/awesome/backgrounds/pent-blue.png", s)
     -- gears.wallpaper.maximized("/usr/share/backgrounds/mate/desktop/Ubuntu-Mate-Cold-no-logo.png", s)
     -- gears.wallpaper.centered("/home/clock/images/void-stars-2.png", s)
